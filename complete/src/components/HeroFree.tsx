@@ -3,15 +3,11 @@ import { Sprite, useTick } from "@pixi/react";
 import heroAsset from "../assets/hero.png";
 import { useControls } from "../hooks/useControls";
 
-interface IHeroProps {
-  x: number;
-  y: number;
-}
 
 
-const HeroFree = ({ x: initialX, y: initialY }: IHeroProps) => {
+const HeroFree = () => {
   const { getControlsDirection } = useControls();
-  const [position, setPosition] = useState({ x: initialX, y: initialY });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   useTick(() => {
     const { pressedKeys } = getControlsDirection();
