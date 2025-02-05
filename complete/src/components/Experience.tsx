@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Container, Sprite, Stage } from "@pixi/react";
 import levelAsset from "../assets/map.png";
-import { GAME_WIDTH, GAME_HEIGHT } from "../consts/game-world";
+import { GAME_WIDTH, GAME_HEIGHT, TILE_SIZE } from "../consts/game-world";
 import useDimensions from "../hooks/useDimensions";
 import { IPosition } from "../types/common";
 import HeroMouse from "./HeroClick";
@@ -12,8 +12,8 @@ const Experience = () => {
 
   const handleStageClick = (event: React.PointerEvent) => {
     onClickMove.current?.({
-      x: event.nativeEvent.offsetX / scale,
-      y: event.nativeEvent.offsetY / scale,
+      x: event.nativeEvent.offsetX / scale - TILE_SIZE / 2,
+      y: event.nativeEvent.offsetY / scale - TILE_SIZE / 2,
     });
   };
 
