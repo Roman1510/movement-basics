@@ -7,11 +7,11 @@ import { IPosition } from "../types/common";
 
 
 
-interface HeroProps {
+interface IHeroProps {
   onClickMove: MutableRefObject<((target: IPosition) => void) | null>;
 }
 
-const HeroMouse = ({ onClickMove }: HeroProps) => {
+const HeroMouse = ({ onClickMove }: IHeroProps) => {
   const { getControlsDirection } = useControls();
   const [position, setPosition] = useState<IPosition>({ x: 0, y: 0 });
   const [target, setTarget] = useState<IPosition | null>(null);
