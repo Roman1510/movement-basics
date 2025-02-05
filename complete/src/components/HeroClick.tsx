@@ -1,0 +1,81 @@
+import { useState, MutableRefObject } from "react";
+import { Sprite, useTick } from "@pixi/react";
+import heroAsset from "../assets/hero.png";
+import { useControls } from "../hooks/useControls";
+import { SPEED } from "../consts/game-world";
+
+type Position = { x: number; y: number };
+
+interface HeroProps {
+  onClickMove: MutableRefObject<((target: Position) => void) | null>;
+}
+
+const HeroMouse = ({ onClickMove }: HeroProps) => {
+  const { getControlsDirection } = useControls();
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+  const [target, setTarget] = useState<Position | null>(null);
+  const [isClickMoving, setIsClickMoving] = useState(false);
+
+  useTick(() => {
+    const { pressedKeys } = getControlsDirection();
+    let dx = 0, dy = 0;
+
+    if (pressedKeys.includes("UP")) dy -= 1;
+    if (pressedKeys.includes("DOWN")) dy += 1;
+    if (pressedKeys.includes("LEFT")) dx -= 1;
+    if (pressedKeys.includes("RIGHT")) dx += 1;
+
+    const isKeyMoving = dx !== 0 || dy !== 0;
+
+    setPosition((prev) => {
+      let { x, y } = prev;
+
+      if (isKeyMoving) {
+
+        const magnitude = Math.sqrt(dx * dx + dy * dy);
+        dx = (dx / magnitude) * SPEED;
+        dy = (dy / magnitude) * SPEED;
+
+
+        setIsClickMoving(false);
+        return { x: x + dx, y: y + dy };
+      }
+
+      if (isClickMoving && target) {
+        let tx = target.x - x;
+        let ty = target.y - y;
+        const distance = Math.sqrt(tx * tx + ty * ty);
+
+        if (distance <= SPEED) {
+          setIsClickMoving(false);
+          return target;
+        }
+
+        tx = (tx / distance) * SPEED;
+        ty = (ty / distance) * SPEED;
+
+        return { x: x + tx, y: y + ty };
+      }
+
+      return prev;
+    });
+  });
+
+  const handleMoveTo = (newTarget: Position) => {
+    setTarget(newTarget);
+    setIsClickMoving(true);
+  };
+
+  onClickMove.current = handleMoveTo;
+
+  return (
+    <Sprite
+      image={heroAsset}
+      x={position.x}
+      y={position.y}
+      scale={0.5}
+    />
+  );
+};
+
+export default HeroMouse;
