@@ -3,17 +3,18 @@ import { Sprite, useTick } from "@pixi/react";
 import heroAsset from "../assets/hero.png";
 import { useControls } from "../hooks/useControls";
 import { SPEED } from "../consts/game-world";
+import { IPosition } from "../types/common";
 
-type Position = { x: number; y: number };
+
 
 interface HeroProps {
-  onClickMove: MutableRefObject<((target: Position) => void) | null>;
+  onClickMove: MutableRefObject<((target: IPosition) => void) | null>;
 }
 
 const HeroMouse = ({ onClickMove }: HeroProps) => {
   const { getControlsDirection } = useControls();
-  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
-  const [target, setTarget] = useState<Position | null>(null);
+  const [position, setPosition] = useState<IPosition>({ x: 0, y: 0 });
+  const [target, setTarget] = useState<IPosition | null>(null);
   const [isClickMoving, setIsClickMoving] = useState(false);
 
   useTick(() => {
@@ -61,7 +62,7 @@ const HeroMouse = ({ onClickMove }: HeroProps) => {
     });
   });
 
-  const handleMoveTo = (newTarget: Position) => {
+  const handleMoveTo = (newTarget: IPosition) => {
     setTarget(newTarget);
     setIsClickMoving(true);
   };
